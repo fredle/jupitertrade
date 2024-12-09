@@ -1,0 +1,7 @@
+solana==0.35.1
+pyserum
+requests
+base58
+solders==0.21.0
+ccxt
+web3
