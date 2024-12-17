@@ -5,3 +5,5 @@ base58
 solders==0.21.0
 ccxt
 web3
+cryptography
+matplotlib

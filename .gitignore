@@ -4,3 +4,5 @@ private_key.txt
 orders.csv
 
 response.json
+
+__pycache__/
