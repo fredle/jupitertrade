@@ -38,7 +38,6 @@ class JupiterTrade:
         self.RPC_CONNECTION = Client("https://api.mainnet-beta.solana.com")
         WALLET_PRIV_KEY = get_private_key()
 
-
         self.SOL = CryptoToken(
             address="So11111111111111111111111111111111111111112",
             decimals=9,
@@ -149,13 +148,14 @@ class JupiterTrade:
             print(f"An SolanaRpcException error occurred: {e}")
 
 
-
     def cancel_order(self, order_id):
-
         self.jupiter_api.cancel_order(order_id)
 
+    def get_price(self, token_1, token_2):
+        return self.jupiter_api.get_price(token_1, token_2)
 
-    def print_order_status(self,label,order):
+    def get_order_status(self,label,order):
+
         tx_id = order.transaction_hash.__str__()
         if(self.tx_status.get(tx_id) != TransactionConfirmationStatus.Finalized):
             self.tx_status[tx_id] = self.check_transaction_status(order.order_id, order.transaction_hash)
@@ -202,13 +202,14 @@ if __name__ == '__main__':
     while True:
         try:
             while True:
-            #price = service.get_price(token_1, token_2)
-                service.print_order_status("buy", buy_order)
-                service.print_order_status("sell", sell_order)
-                #service.order_chart.update(time.time(), 1000 * buy_order.price, 1000/sell_order.price, price)
+                price = service.get_price(token_1, token_2)
+                service.get_order_status("buy", buy_order)
+                service.get_order_status("sell", sell_order)
+                service.order_chart.update(time.time(), 1000 * buy_order.price, 1000/sell_order.price, price)
                 time.sleep(5)
         except KeyboardInterrupt:
             print("KeyboardInterrupt detected. Cancelling open orders...")
+
             service.cancel_order(buy_order.order_id)
             service.cancel_order(sell_order.order_id)
             break

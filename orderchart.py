@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import time
 
 class OrderChart:
     def __init__(self):
@@ -14,8 +16,20 @@ class OrderChart:
         self.sell_prices = []
         self.last_prices = []
 
+        self.ani = animation.FuncAnimation(self.fig, self.animate, interval=1000, cache_frame_data=False)
+        plt.ion()
+
+    def animate(self, _):
+        self.buy_limit_price.set_data(self.times, self.buy_prices)
+        self.sell_limit_price.set_data(self.times, self.sell_prices)
+        self.last_price.set_data(self.times, self.last_prices)
+        
+        self.ax.relim()
+        self.ax.autoscale_view()
+        self.fig.canvas.draw()
+        
     def update(self, time, buy_price, sell_price, last_price):
-        print(time, buy_price, sell_price, last_price)
+
         self.times.append(time)
         self.buy_prices.append(float(buy_price))
         self.sell_prices.append(float(sell_price))
@@ -27,15 +41,16 @@ class OrderChart:
         
         self.ax.relim()
         self.ax.autoscale_view()
-        plt.draw()
-        plt.pause(0.01)
+        self.fig.canvas.draw()
+
 
 
 if __name__ == '__main__':
-    import time
     import random
+    import time
+
     order_chart = OrderChart()
-    for i in range(100):
-        order_chart.update(i, random.randint(1, 100), random.randint(1, 100), random.randint(1, 100))
-        time.sleep(0.1)
-    plt.show()
+    
+    while True:
+        order_chart.update(time.time(), random.uniform(100, 200), random.uniform(100, 200), random.uniform(100, 200))
+        plt.pause(1)
